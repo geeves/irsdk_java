@@ -34,6 +34,8 @@ import com.joffrey.iracing.irsdkjava.model.SdkStarter;
 import com.joffrey.iracing.irsdkjava.yaml.YamlService;
 import com.joffrey.iracing.irsdkjava.yaml.irsdkyaml.CamerasGroupsYaml;
 import com.joffrey.iracing.irsdkjava.yaml.irsdkyaml.YamlFile;
+
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,18 +43,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.test.StepVerifier;
 
 @ExtendWith(SpringExtension.class)
 class TestCameraService {
 
-    @MockBean
+    @MockitoBean
     private SdkStarter  sdkStarter;
-    @MockBean
+    @MockitoBean
     private Header      header;
-    @MockBean
+    @MockitoBean
     private YamlService yamlService;
 
     // Class under test
@@ -62,7 +64,7 @@ class TestCameraService {
     private ByteBuffer byteBufferYamlFile;
 
     @BeforeEach
-    void init() {
+    void init() throws Exception {
         cameraService = new CameraService(new FluxProperties(), sdkStarter, yamlService);
         byteBufferYamlFile = createByteBufferYamlFile("camera/cameras.yml");
         YamlFile yamlFile = loadYamlObject(byteBufferYamlFile);

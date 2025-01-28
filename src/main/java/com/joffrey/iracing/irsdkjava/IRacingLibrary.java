@@ -36,61 +36,62 @@ import com.joffrey.iracing.irsdkjava.telemetry.model.TelemetryData;
 import com.joffrey.iracing.irsdkjava.trackmaptracker.TrackmapTrackerService;
 import com.joffrey.iracing.irsdkjava.trackmaptracker.model.TrackmapTrackerDriver;
 import com.joffrey.iracing.irsdkjava.windows.WindowsService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
 public class IRacingLibrary {
 
-    private final LapTimingService       lapTimingService;
-    private final RaceInfoService        raceInfoService;
-    private final TelemetryService       telemetryService;
-    private final TrackmapTrackerService trackmapTrackerService;
-    private final CameraService          cameraService;
-    private final WindowsService         windowsService;
+	private final LapTimingService lapTimingService;
+	private final RaceInfoService raceInfoService;
+	private final TelemetryService telemetryService;
+	private final TrackmapTrackerService trackmapTrackerService;
+	private final CameraService cameraService;
+	private final WindowsService windowsService;
 
-    // Flux
-    public Flux<List<TrackmapTrackerDriver>> getTrackmapTrackerList() {
-        return trackmapTrackerService.getTrackmapTrackerListFlux();
-    }
+	// Flux
+	public Flux<List<TrackmapTrackerDriver>> getTrackmapTrackerList() {
+		return trackmapTrackerService.getTrackmapTrackerListFlux();
+	}
 
-    public Flux<List<LapTimingData>> getLapTimingDataList() {
-        return lapTimingService.getLapTimingDataListFlux();
-    }
+	public Flux<List<LapTimingData>> getLapTimingDataList() {
+		return lapTimingService.getLapTimingDataListFlux();
+	}
 
-    public Flux<RaceInfo> getRaceInfo() {
-        return raceInfoService.getRaceInfoFlux();
-    }
+	public Flux<RaceInfo> getRaceInfo() {
+		return raceInfoService.getRaceInfoFlux();
+	}
 
-    public Flux<TelemetryData> getTelemetryData() {
-        return telemetryService.getTelemetryDataFlux();
-    }
+	public Flux<TelemetryData> getTelemetryData() {
+		return telemetryService.getTelemetryDataFlux();
+	}
 
-    public Flux<CameraPacket> getCameraPacket() {
-        return cameraService.getCameraPacketFlux();
-    }
+	public Flux<CameraPacket> getCameraPacket() {
+		return cameraService.getCameraPacketFlux();
+	}
 
-    // Broadcast
-    public void broadcastMsg(BroadcastMsg msg, int var1, int var2, int var3) {
-        broadcastMsg(msg, var1, windowsService.MAKELONG(var2, var3));
-    }
+	// Broadcast
+	public void broadcastMsg(BroadcastMsg msg, int var1, int var2, int var3) {
+		broadcastMsg(msg, var1, windowsService.MAKELONG(var2, var3));
+	}
 
-    public void broadcastMsg(BroadcastMsg msg, int var1, float var2) {
-        // multiply by 2^16-1 to move fractional part to the integer part
-        int real = (int) (var2 * 65536.0f);
+	public void broadcastMsg(BroadcastMsg msg, int var1, float var2) {
+		// multiply by 2^16-1 to move fractional part to the integer part
+		int real = (int) (var2 * 65536.0f);
 
-        broadcastMsg(msg, var1, real);
-    }
+		broadcastMsg(msg, var1, real);
+	}
 
-    private void broadcastMsg(BroadcastMsg msg, int var1, int var2) {
-        int msgId = windowsService.registerWindowMessage(Constant.IRSDK_BROADCASTMSGNAME);
+	private void broadcastMsg(BroadcastMsg msg, int var1, int var2) {
+		int msgId = windowsService.registerWindowMessage(Constant.IRSDK_BROADCASTMSGNAME);
 
-        if (msgId != 0 && msg.getValue() >= 0 && msg.getValue() < BroadcastMsg.irsdk_BroadcastLast.getValue()) {
-            windowsService.sendNotifyMessage(msgId, windowsService.MAKELONG(msg.getValue(), var1), var2);
-        }
-    }
+		if (msgId != 0 && msg.getValue() >= 0 && msg.getValue() < BroadcastMsg.irsdk_BroadcastLast.getValue()) {
+			windowsService.sendNotifyMessage(msgId, windowsService.MAKELONG(msg.getValue(), var1), var2);
+		}
+	}
 
 }

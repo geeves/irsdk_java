@@ -24,10 +24,8 @@
 package com.joffrey.iracing.irsdkjava.config;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@ComponentScan(basePackages = "com.joffrey.iracing.irsdkjava")
 @Configuration
 @EnableConfigurationProperties({FluxProperties.class})
 public class IRacingLibraryConfiguration {

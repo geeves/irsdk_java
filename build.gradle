@@ -1,0 +1,82 @@
+plugins {
+	id "org.jetbrains.kotlin.jvm" version "1.9.25"
+	id "org.jetbrains.kotlin.plugin.spring" version "1.9.25"
+	id "org.jetbrains.kotlin.plugin.jpa" version "1.9.25"
+	id "java"
+	id "org.springframework.boot" version "3.4.1"
+	id "io.spring.dependency-management" version "1.1.7"
+}
+
+group = "io.soulglo"
+version = "0.0.1-SNAPSHOT"
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+def log4jVer = "2.24.3"
+
+dependencies {
+//	implementation "org.springframework.boot:spring-boot-starter-batch"
+//	implementation "org.springframework.boot:spring-boot-starter-jdbc"
+	implementation "org.springframework.boot:spring-boot-starter"
+	implementation 'org.springframework.boot:spring-boot-configuration-processor'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'net.java.dev.jna:jna-platform:5.16.0'
+
+
+//	implementation "org.apache.httpcomponents.client5:httpclient5:5.4.1"
+//	implementation "org.apache.httpcomponents.client5:httpclient5-cache:5.4.1"
+//	implementation "org.apache.httpcomponents.client5:httpclient5-fluent:5.4.1"
+//	implementation "org.apache.httpcomponents.core5:httpcore5:5.3.2"
+
+	// https://mvnrepository.com/artifact/commons-codec/commons-codec
+//	implementation "commons-codec:commons-codec:1.17.2"
+
+
+//	implementation "org.liquibase:liquibase-core"
+
+	implementation("org.apache.logging.log4j:log4j-core:$log4jVer")
+	testImplementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVer")
+
+	implementation "org.projectlombok:lombok"
+//	developmentOnly "org.springframework.boot:spring-boot-devtools"
+//	developmentOnly "org.springframework.boot:spring-boot-docker-compose"
+//	runtimeOnly "com.mysql:mysql-connector-j"
+//	runtimeOnly "org.postgresql:postgresql"
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.0'
+
+	annotationProcessor "org.projectlombok:lombok"
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+	}
+	testImplementation 'io.projectreactor:reactor-test:3.7.2'
+	testImplementation 'org.assertj:assertj-core:3.27.3'
+
+//	testImplementation "org.springframework.batch:spring-batch-test"
+//	implementation "org.jetbrains.kotlin:kotlin-reflect"
+//	testImplementation "org.jetbrains.kotlin:kotlin-test-junit5"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+kotlin {
+	compilerOptions {
+		freeCompilerArgs.addAll "-Xjsr305=strict"
+	}
+}
+
+tasks.named("test") {
+	useJUnitPlatform()
+}
